@@ -1,49 +1,43 @@
-import React, { PropTypes, Component } from 'react';
+import './ContainerList.css';
+
+import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import Container from './Container';
 import * as containerActions from '../actions/container';
 
-import './ContainerList.css';
+const ContainerList = ({ containers, error, actions }) => {
+  return (
+    <section>
+      <h1>
+        Containers <button onClick={actions.fetchContainers}>Load</button>
+      </h1>
+      <ul className="ContainerList-parent">
+        {error
+          ? <Error message={error} />
+          : containers.map(container => (
+              <Container key={container.InstanceId} {...container} />
+            ))}
+      </ul>
+    </section>
+  );
+};
 
-class ContainerList extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-  render() {
-    const { containers, actions } = this.props;
-    return (
-      <section>
-        <h1>
-          Containers <button onClick={actions.requestContainers}>Load</button>
-        </h1>
-        <ul className="ContainerList-parent">
-          {containers.map(container => (
-            <Container key={container.InstanceId} {...container} />
-          ))}
-        </ul>
-      </section>
-    );
-  }
-}
+const Error = ({ message }) => <div className="Error">{message}</div>;
 
 ContainerList.propTypes = {
-  containers: PropTypes.array.isRequired,
+  containers: PropTypes.arrayOf(PropTypes.object).isRequired,
+  error: PropTypes.string,
   actions: PropTypes.object.isRequired
 };
 
-function mapStateToProps(state, props) {
-  return {
-    containers: state.containers
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    actions: bindActionCreators(containerActions, dispatch)
-  };
-}
+const mapStateToProps = (state, props) => ({
+  containers: state.containers,
+  error: state.error
+});
+const mapDispatchToProps = dispatch => ({
+  actions: bindActionCreators(containerActions, dispatch)
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(ContainerList);

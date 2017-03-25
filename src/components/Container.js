@@ -21,7 +21,7 @@ const Container = (
   <div className="Container">
     <h2>{name(Tags)} ({State.Name})</h2>
     <div>
-      <strong>IP Address</strong>: {PrivateIpAddress}
+      <strong>IP Address</strong>: <code>{PrivateIpAddress}</code>
     </div>
     <div>
       <strong>Instance Type</strong>: {InstanceType}
