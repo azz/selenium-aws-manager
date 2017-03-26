@@ -1,9 +1,6 @@
 import React, { PropTypes } from 'react';
 
-const name = tags => {
-  const tag = tags.find(tag => tag.Key === 'Name');
-  return tag ? tag.Value : '<No Name>';
-};
+import { getNameFromTags } from '../util';
 
 const uptime = launchTime => {
   return Math.round((Date.now() - launchTime.getTime()) / (1000 * 60 * 60));
@@ -20,10 +17,10 @@ const Instance = (
     Platform
   }
 ) => (
-  <div className="column is-4">
+  <div className="column is-narrow">
     <div className="box">
       <h2>
-        {name(Tags) + ' '}
+        {getNameFromTags(Tags) + ' '}
         <span
           className={
             `tag ${State.Name === 'running' ? 'is-success' : 'is-danger'}`
@@ -38,10 +35,9 @@ const Instance = (
       <div>
         <strong>Key Pair</strong>: {KeyName}
       </div>
-      {Platform &&
-        <div>
-          <strong>Platform</strong>: {Platform}
-        </div>}
+      <div>
+        <strong>Platform</strong>: {Platform || '-'}
+      </div>
       <div>
         <strong>Instance Type</strong>: {InstanceType}
       </div>
