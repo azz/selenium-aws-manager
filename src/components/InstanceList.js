@@ -15,11 +15,11 @@ const InstanceList = ({ instances, error, actions }) => {
             Reload
           </button>
         </h2>
-        <ul className="tile is-ancestor">
+        <div className="columns" style={{ flexFlow: 'row wrap' }}>
           {instances.map(instance => (
             <Instance key={instance.InstanceId} {...instance} />
           ))}
-        </ul>
+        </div>
       </div>
     </section>
   );

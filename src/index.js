@@ -17,9 +17,5 @@ ReactDOM.render(
   document.getElementById('root')
 );
 
-import { fetchImages } from './actions/image';
-import { fetchInstances } from './actions/instance';
-import { fetchKeyPairs } from './actions/keypair';
-store.dispatch(fetchImages());
-store.dispatch(fetchInstances());
-store.dispatch(fetchKeyPairs());
+import init from './actions/init';
+store.dispatch(init());

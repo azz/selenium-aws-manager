@@ -20,8 +20,8 @@ const Instance = (
     Platform
   }
 ) => (
-  <div className="tile is-parent">
-    <div className="tile is-child box">
+  <div className="column is-4">
+    <div className="box">
       <h2>
         {name(Tags) + ' '}
         <span

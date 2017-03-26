@@ -35,6 +35,7 @@ export default function reducer(state = initialState, { type, ...payload }) {
       else
         return {
           ...state,
+          instances: [],
           error: undefined
         };
 
@@ -52,6 +53,7 @@ export default function reducer(state = initialState, { type, ...payload }) {
       else
         return {
           ...state,
+          images: [],
           error: undefined
         };
 
