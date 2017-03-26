@@ -105,6 +105,7 @@ export default function reducer(state = initialState, { type, ...payload }) {
       else
         return {
           ...state,
+          keyPairs: [],
           error: undefined
         };
 
