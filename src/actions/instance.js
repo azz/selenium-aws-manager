@@ -19,29 +19,58 @@ export function fetchInstances() {
   };
 }
 
-export const LAUNCH_INSTANCE = 'LAUNCH_INSTANCE';
+export const LAUNCH_INSTANCES = 'LAUNCH_INSTANCES';
 
-export function launchInstance({ keyPair, instanceType, imageId }) {
+export function launchInstance({ keyPair, instanceType, imageId, count = 1 }) {
   return (dispatch, getState) => {
-    dispatch({ type: LAUNCH_INSTANCE });
+    dispatch({ type: LAUNCH_INSTANCES });
 
     ec2(getState().credentials).runInstances(
       {
         DryRun: true,
-        MaxCount: 1,
-        MinCount: 1,
+        MaxCount: count,
+        MinCount: count,
         KeyName: keyPair,
         InstanceType: instanceType,
         ImageId: imageId,
         InstanceInitiatedShutdownBehavior: 'terminate'
       },
       (error, data) => {
+        if (error) {
+          dispatch({ type: LAUNCH_INSTANCES, error });
+        } else {
+          const instanceIds = data.Instances.map(
+            instance => instance.InstanceId
+          );
+          dispatch({
+            type: LAUNCH_INSTANCES,
+            data: data.Instances
+          });
+          dispatch(awaitInstancesState(instanceIds, 'instanceExists'));
+          dispatch(awaitInstancesState(instanceIds, 'instanceRunning'));
+        }
+      }
+    );
+  };
+}
+
+function awaitInstancesState(instanceIds, state) {
+  return (dispatch, getState) => {
+    ec2(getState().credentials).waitFor(
+      state,
+      {
+        InstanceIds: instanceIds
+      },
+      (error, data) => {
         if (error)
-          dispatch({ type: LAUNCH_INSTANCE, error });
+          dispatch({ type: FETCH_INSTANCES, error });
         else
           dispatch({
-            type: LAUNCH_INSTANCE,
-            data: data.Instances[0]
+            type: FETCH_INSTANCES,
+            data: flatMap(
+              data.Reservations,
+              reservation => reservation.Instances
+            )
           });
       }
     );

@@ -29,6 +29,18 @@ const Instance = (
           {State.Name}
         </span>
       </h2>
+      <div className="field has-addons">
+        <p className="control">
+          <button className="button is-danger is-outlined">
+            Stop
+          </button>
+        </p>
+        <p className="control">
+          <button className="button is-danger is-outlined">
+            Terminate
+          </button>
+        </p>
+      </div>
       <div>
         <strong>IP Address</strong>: <code>{PrivateIpAddress}</code>
       </div>
