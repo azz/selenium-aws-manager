@@ -1,9 +1,11 @@
 {
   "name": "selenium-aws-manager",
+  "description": "Web utility to manage provisions for Selenium Grid running in AWS.",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
     "aws-sdk": "^2.32.0",
+    "bulma": "^0.4.0",
     "lodash": "^4.17.4",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",

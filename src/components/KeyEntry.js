@@ -20,7 +20,7 @@ const KeyEntry = ({ credentials, actions }) => {
       <form onSubmit={submit}>
         <input
           ref={input => keyIdInput = input}
-          className="KeyEntry-access"
+          className="KeyEntry-access input"
           type="text"
           value={accessKeyId}
           placeholder="Access Key ID"
@@ -28,7 +28,7 @@ const KeyEntry = ({ credentials, actions }) => {
         />
         <input
           ref={input => secretKeyInput = input}
-          className="KeyEntry-secret"
+          className="KeyEntry-secret input"
           type="text"
           value={secretAccessKey}
           placeholder="Secret Access Key"
@@ -38,7 +38,7 @@ const KeyEntry = ({ credentials, actions }) => {
     );
   }
 
-  return <button onClick={clear}>Clear Keys</button>;
+  return <button className="button" onClick={clear}>Clear Keys</button>;
 };
 
 KeyEntry.propTypes = {

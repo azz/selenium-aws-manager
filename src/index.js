@@ -1,4 +1,4 @@
-import './index.css';
+import 'bulma/css/bulma.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
@@ -16,3 +16,10 @@ ReactDOM.render(
   </Provider>,
   document.getElementById('root')
 );
+
+import { fetchImages } from './actions/image';
+import { fetchInstances } from './actions/instance';
+import { fetchKeyPairs } from './actions/keypair';
+store.dispatch(fetchImages());
+store.dispatch(fetchInstances());
+store.dispatch(fetchKeyPairs());
