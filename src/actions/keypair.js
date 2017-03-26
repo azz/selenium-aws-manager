@@ -6,7 +6,7 @@ export function fetchKeyPairs() {
   return (dispatch, getState) => {
     dispatch({ type: FETCH_KEY_PAIRS });
 
-    ec2(getState().credentials).describeKeyPairs((error, data) => {
+    ec2(getState()).describeKeyPairs((error, data) => {
       if (error)
         dispatch({ type: FETCH_KEY_PAIRS, error });
       else

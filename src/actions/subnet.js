@@ -6,7 +6,7 @@ export function fetchSubnets() {
   return (dispatch, getState) => {
     dispatch({ type: FETCH_SUBNETS });
 
-    ec2(getState().credentials).describeSubnets((error, data) => {
+    ec2(getState()).describeSubnets((error, data) => {
       if (error) {
         dispatch({ type: FETCH_SUBNETS, error });
         return;

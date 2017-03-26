@@ -1,7 +1,8 @@
 import { defaults } from 'lodash';
 
 import { FETCH_INSTANCES, LAUNCH_INSTANCES } from '../actions/instance';
-import { FETCH_IMAGES } from '../actions/image';
+import { FETCH_IMAGES, SET_IMAGES } from '../actions/image';
+import { SET_ERROR } from '../actions/error';
 import { FETCH_SUBNETS } from '../actions/subnet';
 import { FETCH_KEY_PAIRS } from '../actions/keypair';
 import { SET_CREDENTIALS } from '../actions/credential';
@@ -59,7 +60,22 @@ export default function reducer(state = initialState, { type, ...payload }) {
       return twoFatesAction(state, payload, 'subnets', []);
 
     case FETCH_IMAGES:
-      return twoFatesAction(state, payload, 'images', []);
+      return {
+        ...state,
+        images: []
+      };
+
+    case SET_IMAGES:
+      return {
+        ...state,
+        images: payload.data
+      };
+
+    case SET_ERROR:
+      return {
+        ...state,
+        error: payload.error.toString()
+      };
 
     case FETCH_KEY_PAIRS:
       return twoFatesAction(state, payload, 'keyPairs', []);

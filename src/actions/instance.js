@@ -7,7 +7,7 @@ export function fetchInstances() {
   return (dispatch, getState) => {
     dispatch({ type: FETCH_INSTANCES });
 
-    ec2(getState().credentials).describeInstances((error, data) => {
+    ec2(getState()).describeInstances((error, data) => {
       if (error)
         dispatch({ type: FETCH_INSTANCES, error });
       else
@@ -25,7 +25,7 @@ export function launchInstance({ keyPair, instanceType, imageId, count = 1 }) {
   return (dispatch, getState) => {
     dispatch({ type: LAUNCH_INSTANCES });
 
-    ec2(getState().credentials).runInstances(
+    ec2(getState()).runInstances(
       {
         DryRun: true,
         MaxCount: count,
@@ -56,7 +56,7 @@ export function launchInstance({ keyPair, instanceType, imageId, count = 1 }) {
 
 function awaitInstancesState(instanceIds, state) {
   return (dispatch, getState) => {
-    ec2(getState().credentials).waitFor(
+    ec2(getState()).waitFor(
       state,
       {
         InstanceIds: instanceIds
