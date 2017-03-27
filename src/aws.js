@@ -1,8 +1,9 @@
 import { EC2, ElasticBeanstalk, S3 } from 'aws-sdk';
+import { bindMethods } from './util';
 
-export const ec2 = state => new EC2(state.credentials);
+export const ec2 = state => bindMethods(new EC2(state.credentials));
 
-export const s3 = state => new S3(state.credentials);
+export const s3 = state => bindMethods(new S3(state.credentials));
 
 export const elasticBeanstalk = state =>
-  new ElasticBeanstalk(state.credentials);
+  bindMethods(new ElasticBeanstalk(state.credentials));

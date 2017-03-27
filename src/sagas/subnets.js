@@ -7,7 +7,7 @@ import { actions as errorActions } from '../ducks/error';
 export function* fetchSubnets() {
   const api = yield select(ec2);
   try {
-    const data = yield cps([api, api.describeSubnets]);
+    const data = yield cps(api.describeSubnets);
     yield put(subnetsActions.setSubnets(data.Subnets));
   } catch (error) {
     yield put(errorActions.setError(error));

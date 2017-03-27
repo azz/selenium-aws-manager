@@ -8,7 +8,7 @@ import { actions as errorActions } from '../ducks/error';
 export function* fetchInstances() {
   const api = yield select(ec2);
   try {
-    const data = yield cps([api, api.describeInstances]);
+    const data = yield cps(api.describeInstances);
     yield put(
       actions.setInstances(
         flatMap(data.Reservations, reservation => reservation.Instances)
@@ -22,7 +22,7 @@ export function* fetchInstances() {
 export function* launchInstance({ keyPair, instanceType, imageId, count = 1 }) {
   const api = yield select(ec2);
   try {
-    const data = yield cps([api, api.runInstances], {
+    const data = yield cps(api.runInstances, {
       DryRun: true,
       MaxCount: count,
       MinCount: count,
@@ -40,9 +40,9 @@ export function* launchInstance({ keyPair, instanceType, imageId, count = 1 }) {
   }
 }
 
-function* awaitInstancesState(api, instanceIds, state) {
+function* awaitInstancesState(ec2, instanceIds, state) {
   // eslint-disable-next-line no-unused-vars
-  const data = yield cps([api, api.waitFor], state, {
+  const data = yield cps(ec2.waitFor, state, {
     InstanceIds: instanceIds
   });
   yield* fetchInstances();
