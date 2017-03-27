@@ -3,7 +3,7 @@ import './KeyEntry.css';
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as credentialActions from '../actions/credential';
+import { actions as credentialActions } from '../ducks/credentials';
 
 const KeyEntry = ({ credentials, actions }) => {
   const { accessKeyId, secretAccessKey } = credentials;

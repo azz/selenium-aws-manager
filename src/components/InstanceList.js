@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import Instance from './Instance';
-import * as instanceActions from '../actions/instance';
+import { actions as instanceActions } from '../ducks/instances';
 
 const InstanceList = ({ instances, error, actions }) => {
   return (

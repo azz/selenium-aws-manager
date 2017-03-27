@@ -16,6 +16,3 @@ ReactDOM.render(
   </Provider>,
   document.getElementById('root')
 );
-
-import init from './actions/init';
-store.dispatch(init());

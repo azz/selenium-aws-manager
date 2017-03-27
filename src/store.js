@@ -1,19 +1,17 @@
 import { createStore, applyMiddleware, compose } from 'redux';
-import rootReducer from './reducers/root';
-import { watchFetchImages } from './actions/image';
-import thunkMiddleware from 'redux-thunk';
+import reducer from './ducks';
+import saga from './sagas';
 import createSagaMiddleware from 'redux-saga';
 
-export default _ => {
+export default function makeStore() {
   const sagaMiddleware = createSagaMiddleware();
 
   const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ||
     compose;
   const store = createStore(
-    rootReducer,
-    composeEnhancers(applyMiddleware(thunkMiddleware, sagaMiddleware))
+    reducer,
+    composeEnhancers(applyMiddleware(sagaMiddleware))
   );
-  sagaMiddleware.run(watchFetchImages);
-
+  sagaMiddleware.run(saga);
   return store;
-};
+}

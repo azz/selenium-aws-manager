@@ -4,8 +4,10 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import * as instanceActions from '../actions/instance';
-import { getNameFromTags } from '../util';
+import { actions as instanceActions } from '../ducks/instances';
+import { selectors as subnetSelectors } from '../ducks/subnets';
+
+import { DisabledLoadingOption } from './Forms';
 
 const ControlPanel = (
   { images, keyPairs, instanceTypes, subnets, actions }
@@ -34,12 +36,14 @@ const ControlPanel = (
           <div className="field-body">
             <p className="control">
               <span className="select">
-                <select ref={element => amiSelect = element}>
-                  {images.map(image => (
-                    <option key={image.ImageId} value={image.ImageId}>
-                      {image.Name} ({image.State})
-                    </option>
-                  ))}
+                <select ref={element => amiSelect = element} defaultValue="">
+                  {images.length
+                    ? images.map(image => (
+                        <option key={image.ImageId} value={image.ImageId}>
+                          {image.Name} ({image.State})
+                        </option>
+                      ))
+                    : <DisabledLoadingOption />}
                 </select>
               </span>
             </p>
@@ -72,15 +76,20 @@ const ControlPanel = (
           <div className="field-body">
             <p className="control">
               <span className="select">
-                <select ref={element => keyPairSelect = element}>
-                  {keyPairs.map(keyPair => (
-                    <option
-                      key={keyPair.KeyFingerprint}
-                      value={keyPair.KeyName}
-                    >
-                      {keyPair.KeyName}
-                    </option>
-                  ))}
+                <select
+                  ref={element => keyPairSelect = element}
+                  defaultValue=""
+                >
+                  {keyPairs.length
+                    ? keyPairs.map(keyPair => (
+                        <option
+                          key={keyPair.KeyFingerprint}
+                          value={keyPair.KeyName}
+                        >
+                          {keyPair.KeyName}
+                        </option>
+                      ))
+                    : <DisabledLoadingOption />}
                 </select>
               </span>
             </p>
@@ -94,12 +103,14 @@ const ControlPanel = (
           <div className="field-body">
             <p className="control">
               <span className="select">
-                <select ref={element => subnetSelect = element}>
-                  {subnets.map(subnet => (
-                    <option key={subnet.SubnetId} value={subnet.SubnetId}>
-                      {subnet.Name} ({subnet.CidrBlock})
-                    </option>
-                  ))}
+                <select ref={element => subnetSelect = element} defaultValue="">
+                  {subnets.length
+                    ? subnets.map(subnet => (
+                        <option key={subnet.SubnetId} value={subnet.SubnetId}>
+                          {subnet.Name} ({subnet.CidrBlock})
+                        </option>
+                      ))
+                    : <DisabledLoadingOption />}
                 </select>
               </span>
             </p>
@@ -134,20 +145,11 @@ ControlPanel.propTypes = {
   actions: PropTypes.object.isRequired
 };
 
-const addNameToSubnet = subnets => {
-  return subnets
-    .map(subnet => ({
-      ...subnet,
-      Name: getNameFromTags(subnet.Tags)
-    }))
-    .sort((a, b) => a.Name < b.Name);
-};
-
 const mapStateToProps = (state, props) => ({
   images: state.images,
   instanceTypes: state.instanceTypes,
   keyPairs: state.keyPairs,
-  subnets: addNameToSubnet(state.subnets)
+  subnets: subnetSelectors.getSubnetsWithName(state.subnets)
 });
 const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators(instanceActions, dispatch)
