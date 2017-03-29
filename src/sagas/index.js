@@ -1,4 +1,4 @@
-import { takeEvery, takeLatest } from 'redux-saga/effects';
+import { takeEvery } from 'redux-saga/effects';
 
 import { types as imageTypes } from '../ducks/images';
 import { types as instanceTypes } from '../ducks/instances';
@@ -19,7 +19,7 @@ export default function* indexSaga() {
     takeEvery(keyPairsTypes.FETCH_KEY_PAIRS, fetchKeyPairs),
     takeEvery(subnetTypes.FETCH_SUBNETS, fetchSubnets),
     // Reload when credentials change
-    takeLatest(credentialsTypes.SET_CREDENTIALS, load)
+    takeEvery(credentialsTypes.SET_CREDENTIALS, load)
   ];
   yield* load();
 }

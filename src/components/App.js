@@ -7,9 +7,8 @@ import MessagePanel from './MessagePanel';
 
 const App = _ => (
   <div className="App content">
-    <MessagePanel />
-
     <Header />
+    <MessagePanel />
     <div className="App-header" />
     <InstanceList />
     <ControlPanel />

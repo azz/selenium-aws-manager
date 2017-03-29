@@ -15,7 +15,7 @@ export default (state = initialState, { type, credentials }) => {
   switch (type) {
     case types.SET_CREDENTIALS:
       return {
-        ...state.credentials,
+        ...state,
         ...credentials
       };
     default:
