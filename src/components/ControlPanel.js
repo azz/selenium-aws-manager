@@ -6,11 +6,26 @@ import { bindActionCreators } from 'redux';
 
 import { actions as instanceActions } from '../ducks/instances';
 import { selectors as subnetSelectors } from '../ducks/subnets';
+import {
+  actions as seleniumActions,
+  selectors as seleniumSelectors
+} from '../ducks/selenium';
 
-import { DisabledLoadingOption } from './Forms';
+import { DisabledLoadingOption, Field } from './Forms';
 
 const ControlPanel = (
-  { images, keyPairs, instanceTypes, subnets, actions }
+  {
+    images,
+    keyPairs,
+    instanceTypes,
+    subnets,
+    browsers,
+    selectedBrowser,
+    maxInstances,
+    hub,
+    dockerRunCommand,
+    actions
+  }
 ) => {
   let amiSelect, instanceTypeSelect, keyPairSelect, subnetSelect;
   const launchInstance = _ => {
@@ -24,17 +39,14 @@ const ControlPanel = (
 
   return (
     <section className="section">
-      <div className="container">
-        <h2>
-          Launch New Instance
-        </h2>
+      <h2>
+        Launch New Instance
+      </h2>
 
-        <div className="field is-horizontal">
-          <div className="field-label is-normal">
-            <label className="label">Machine Image</label>
-          </div>
-          <div className="field-body">
-            <p className="control">
+      <div className="columns">
+        <div className="column is-6">
+          <div className="container">
+            <Field label="Machine Image">
               <span className="select">
                 <select ref={element => amiSelect = element} defaultValue="">
                   {images.length
@@ -46,16 +58,9 @@ const ControlPanel = (
                     : <DisabledLoadingOption />}
                 </select>
               </span>
-            </p>
-          </div>
-        </div>
+            </Field>
 
-        <div className="field is-horizontal">
-          <div className="field-label is-normal">
-            <label className="label">Instance Type</label>
-          </div>
-          <div className="field-body">
-            <p className="control">
+            <Field label="Instance Type">
               <span className="select">
                 <select ref={element => instanceTypeSelect = element}>
                   {instanceTypes.map(type => (
@@ -65,16 +70,9 @@ const ControlPanel = (
                   ))}
                 </select>
               </span>
-            </p>
-          </div>
-        </div>
+            </Field>
 
-        <div className="field is-horizontal">
-          <div className="field-label is-normal">
-            <label className="label">Key Pair</label>
-          </div>
-          <div className="field-body">
-            <p className="control">
+            <Field label="Key Pair">
               <span className="select">
                 <select
                   ref={element => keyPairSelect = element}
@@ -92,16 +90,9 @@ const ControlPanel = (
                     : <DisabledLoadingOption />}
                 </select>
               </span>
-            </p>
-          </div>
-        </div>
+            </Field>
 
-        <div className="field is-horizontal">
-          <div className="field-label is-normal">
-            <label className="label">Subnet</label>
-          </div>
-          <div className="field-body">
-            <p className="control">
+            <Field label="Subnet">
               <span className="select">
                 <select ref={element => subnetSelect = element} defaultValue="">
                   {subnets.length
@@ -113,23 +104,73 @@ const ControlPanel = (
                     : <DisabledLoadingOption />}
                 </select>
               </span>
-            </p>
+            </Field>
+
+            <Field label="Browser">
+              <span className="select">
+                <select
+                  ref={element => subnetSelect = element}
+                  value={selectedBrowser}
+                  onChange={evt => actions.setBrowser(evt.target.value)}
+                >
+                  {browsers.map(({ seleniumName, displayName }) => (
+                    <option key={seleniumName} value={seleniumName}>
+                      {displayName}
+                    </option>
+                  ))}
+                </select>
+              </span>
+            </Field>
+
+            <Field label="Max Browser Instances">
+              <input
+                className="input"
+                type="number"
+                value={maxInstances}
+                onChange={evt => actions.setMaxInstances(+evt.target.value)}
+              />
+            </Field>
+
+            <Field label="Hub IP Address">
+              <input
+                className="input"
+                type="text"
+                value={hub.host}
+                onChange={evt => actions.setHubHost(evt.target.value)}
+              />
+            </Field>
+
+            <Field label="Hub Port">
+              <input
+                className="input"
+                type="number"
+                value={hub.port}
+                onChange={evt => actions.setHubPort(+evt.target.value)}
+              />
+            </Field>
+
+            <div className="field is-horizontal">
+              <div className="field-label" />
+              <div className="field-body">
+                <div className="field">
+                  <p className="control">
+                    <button
+                      className="button is-primary is-large"
+                      onClick={launchInstance}
+                    >
+                      Launch
+                    </button>
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="field is-horizontal">
-          <div className="field-label" />
-          <div className="field-body">
-            <div className="field">
-              <p className="control">
-                <button
-                  className="button is-primary is-large"
-                  onClick={launchInstance}
-                >
-                  Launch
-                </button>
-              </p>
-            </div>
+        <div className="column is-6">
+          <div className="container">
+            <h3>Preview</h3>
+            <pre>{dockerRunCommand}</pre>
           </div>
         </div>
       </div>
@@ -142,6 +183,10 @@ ControlPanel.propTypes = {
   instanceTypes: PropTypes.arrayOf(PropTypes.string).isRequired,
   keyPairs: PropTypes.arrayOf(PropTypes.object).isRequired,
   subnets: PropTypes.arrayOf(PropTypes.object).isRequired,
+  selectedBrowser: PropTypes.string.isRequired,
+  dockerRunCommand: PropTypes.string.isRequired,
+  maxInstances: PropTypes.number.isRequired,
+  hub: PropTypes.object.isRequired,
   actions: PropTypes.object.isRequired
 };
 
@@ -149,10 +194,18 @@ const mapStateToProps = (state, props) => ({
   images: state.images,
   instanceTypes: state.instanceTypes,
   keyPairs: state.keyPairs,
+  browsers: state.selenium.browsers,
+  selectedBrowser: seleniumSelectors.getSelectedBrowserName(state.selenium),
+  maxInstances: seleniumSelectors.getMaxInstances(state.selenium),
+  dockerRunCommand: seleniumSelectors.getDockerRunCommand(state.selenium),
+  hub: state.selenium.hub,
   subnets: subnetSelectors.getSubnetsWithName(state.subnets)
 });
 const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators(instanceActions, dispatch)
+  actions: {
+    ...bindActionCreators(instanceActions, dispatch),
+    ...bindActionCreators(seleniumActions, dispatch)
+  }
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ControlPanel);

@@ -5,6 +5,7 @@ import subnets from './subnets';
 import keyPairs from './key-pairs';
 import credentials from './credentials';
 import images from './images';
+import selenium from './selenium';
 
 export default combineReducers({
   credentials,
@@ -13,5 +14,6 @@ export default combineReducers({
   instances,
   keyPairs,
   subnets,
+  selenium,
   instanceTypes: _ => ['m4.large', 'm4.xlarge', 'c4.large', 'c4.xlarge']
 });

@@ -7,7 +7,7 @@ const MessagePanel = ({ error, actions }) => {
   const clearError = _ => actions.setError('');
   if (error)
     return (
-      <article className="message is-danger">
+      <article className="message is-danger" style={{ margin: '1rem' }}>
         <div className="message-header">
           <strong>{error.toString().split(':')[0]}</strong>
           <button onClick={clearError} className="delete" />
